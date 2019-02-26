@@ -18,6 +18,24 @@ module.exports = appInfo => {
   // add your middleware config here
   config.middleware = [];
 
+  // error config
+  config.onerror = {
+    json(err, ctx) {
+      const { code, httpStatusCode, httpMsg } = err;
+      if (httpStatusCode) ctx.statusCode = httpStatusCode;
+      ctx.body = {
+        code,
+        msg: httpMsg,
+      };
+    },
+    html(err, ctx) {
+      const { code, httpStatusCode, httpMsg } = err;
+      if (httpStatusCode) ctx.statusCode = httpStatusCode;
+      ctx.body = `<h3 style="color: red;">${httpMsg}</h3>`;
+      ctx.code = code;
+    },
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
