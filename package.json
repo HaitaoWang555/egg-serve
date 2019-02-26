@@ -6,6 +6,13 @@
   "egg": {
     "declarations": true
   },
+  "apidoc": {
+    "name": "mi-serve API",
+    "version": "0.1.0",
+    "description": "mi-serve API",
+    "title": "mi-serve API",
+    "url": "http://127.0.0.1/v1"
+  },
   "dependencies": {
     "egg": "^2.15.1",
     "egg-scripts": "^2.11.0"
@@ -33,7 +40,8 @@
     "cov": "egg-bin cov",
     "lint": "eslint .",
     "ci": "npm run lint && npm run cov",
-    "autod": "autod"
+    "autod": "autod",
+    "docs": "apidoc -i ./app/ -o docs/"
   },
   "ci": {
     "version": "8"
