@@ -17,7 +17,21 @@ module.exports = appInfo => {
 
   // add your middleware config here
   config.middleware = [];
-
+  // post csrf 测试阶段使用
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+  };
+  // sequelize config
+  config.sequelize = {
+    dialect: 'postgres',
+    database: 'egg-serve',
+    host: 'localhost',
+    port: 5432,
+    username: 'postgres',
+    password: 123456,
+  };
   // error config
   config.onerror = {
     json(err, ctx) {

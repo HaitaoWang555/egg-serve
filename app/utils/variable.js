@@ -1,13 +1,13 @@
 'use strict';
 
-/**
- * HTTP 成功响应模板
- */
-const response = {
-  code: 0,
-  data: {
-    msg: '成功',
-  },
+
+const response = function(msg) {
+  return {
+    code: 0,
+    msg: msg || '成功',
+    data: {
+    },
+  };
 };
 
 const InvalidParamCode = 40003;
