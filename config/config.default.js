@@ -35,17 +35,17 @@ module.exports = appInfo => {
   // error config
   config.onerror = {
     json(err, ctx) {
-      const { code, httpStatusCode, httpMsg } = err;
+      const { code, httpStatusCode, original } = err;
       if (httpStatusCode) ctx.statusCode = httpStatusCode;
       ctx.body = {
         code,
-        msg: httpMsg,
+        msg: original,
       };
     },
     html(err, ctx) {
-      const { code, httpStatusCode, httpMsg } = err;
+      const { code, httpStatusCode } = err;
       if (httpStatusCode) ctx.statusCode = httpStatusCode;
-      ctx.body = `<h3 style="color: red;">${httpMsg}</h3>`;
+      ctx.body = `<h3 style="color: red;">${err.original}</h3>`;
       ctx.code = code;
     },
   };
