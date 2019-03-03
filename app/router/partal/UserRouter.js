@@ -116,4 +116,13 @@ module.exports = app => {
     }
   */
   router.post('/user/login', controller.partal.userController.login);
+
+  router.post('/user/logout', controller.partal.userController.logout);
+  router.get('/user/getUserSession', controller.partal.userController.getUserSession);
+  router.get('/user/getUserInfo', controller.partal.userController.getUserInfo);
+  router.post('/user/updateUserInfo', controller.partal.userController.updateUserInfo);
+  router.post('/user/resetPassword', controller.partal.userController.resetPassword);
+  router.get('/user/forgetGetQuestion', controller.partal.userController.forgetGetQuestion);
+  router.post('/user/forgetCheckAnswer', controller.partal.userController.forgetCheckAnswer);
+  router.post('/user/forgetRestPassword', controller.partal.userController.forgetRestPassword);
 };
