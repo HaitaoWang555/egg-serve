@@ -64,8 +64,13 @@ module.exports = app => {
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/register 注册
+    * @apiParam {Object} user
     * @apiParam {String} user.username 用户名
     * @apiParam {String} user.password 密码
+    * @apiParam {String} user.email 邮箱 非必填
+    * @apiParam {String} user.phone 手机号 非必填
+    * @apiParam {String} user.question 密保问题 非必填
+    * @apiParam {String} user.answer 密保答案 非必填
     *
     * @apiGroup user
     *
@@ -93,8 +98,8 @@ module.exports = app => {
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/login 登录
-    * @apiParam {String} username 用户名
-    * @apiParam {String} password 密码
+    * @apiParam {String} username 用户名 必填
+    * @apiParam {String} password 密码 必填
     *
     * @apiGroup user
     *
@@ -116,13 +121,178 @@ module.exports = app => {
     }
   */
   router.post('/user/login', controller.partal.userController.login);
-
+  /**
+    * @apiVersion 0.1.0
+    * @api {post} /user/logout 退出登录
+    *
+    * @apiGroup user
+    *
+    * @apiSuccess {Integer} statusCode 响应码
+    * @apiSuccess {String} msg 提示信息
+    * @apiSuccess {Object} data 响应数据
+    * @apiSuccessExample Success-Response:
+    {
+      "statusCode": 0,
+      "msg": "已成功退出",
+      "data": null
+    }
+  */
   router.post('/user/logout', controller.partal.userController.logout);
+  /**
+    * @apiVersion 0.1.0
+    * @api {get} /user/getUserSession 获取用户信息
+    *
+    * @apiGroup user
+    *
+    * @apiSuccess {Integer} statusCode 响应码
+    * @apiSuccess {String} msg 提示信息
+    * @apiSuccess {Object} data 响应数据
+    * @apiSuccessExample Success-Response:
+    {
+      "statusCode": 0,
+      "msg": "用户已登录",
+      "data": {
+        "id": "ec01c6c5-86a2-4fa5-8267-d24324237de6",
+        "username": "wanghaitao",
+        "email": "123@123.com",
+        "phone": "15124505701",
+        "role": 0,
+        "redirectTo": ""
+      }
+    }
+  */
   router.get('/user/getUserSession', controller.partal.userController.getUserSession);
+  /**
+    * @apiVersion 0.1.0
+    * @api {get} /user/getUserInfo 获取用户详细信息
+    *
+    * @apiGroup user
+    *
+    * @apiSuccess {Integer} statusCode 响应码
+    * @apiSuccess {String} msg 提示信息
+    * @apiSuccess {Object} data 响应数据
+    * @apiSuccessExample Success-Response:
+    {
+      "statusCode": 0,
+      "msg": null,
+      "data": {
+        "id": "ec01c6c5-86a2-4fa5-8267-d24324237de6",
+        "username": "wanghaitao",
+        "email": "123@123.com",
+        "phone": "15124505701",
+        "question": "密保问题"
+      }
+    }
+  */
   router.get('/user/getUserInfo', controller.partal.userController.getUserInfo);
+  /**
+    * @apiVersion 0.1.0
+    * @api {post} /user/updateUserInfo 退出登录
+    *
+    * @apiParam {String} email 邮箱 选填
+    * @apiParam {String} phone 手机 选填
+    *
+    * @apiGroup user
+    *
+    * @apiSuccess {Integer} statusCode 响应码
+    * @apiSuccess {String} msg 提示信息
+    * @apiSuccess {Object} data 响应数据
+    * @apiSuccessExample Success-Response:
+    {
+      "statusCode": 0,
+      "msg": "更新个人信息成功",
+      "data": {
+        "id": "ec01c6c5-86a2-4fa5-8267-d24324237de6",
+        "username": "wanghaitao",
+        "email": "12325@123.com",
+        "phone": "15124505701"
+      }
+    }
+  */
   router.post('/user/updateUserInfo', controller.partal.userController.updateUserInfo);
+  /**
+    * @apiVersion 0.1.0
+    * @api {post} /user/resetPassword 登录状态的重置密码
+    *
+    * @apiParam {String} passwordOld 原密码 必填
+    * @apiParam {String} passwordNew 新密码 必填
+    *
+    * @apiGroup user
+    *
+    * @apiSuccess {Integer} statusCode 响应码
+    * @apiSuccess {String} msg 提示信息
+    * @apiSuccess {Object} data 响应数据
+    * @apiSuccessExample Success-Response:
+    {
+      "statusCode": 0,
+      "msg": "修改密码成功",
+      "data": null
+    }
+    */
   router.post('/user/resetPassword', controller.partal.userController.resetPassword);
+  /**
+    * @apiVersion 0.1.0
+    * @api {get} /user/forgetGetQuestion 获取密保问题
+    *
+    * @apiParam {String} username 用户名 必填
+    *
+    * @apiGroup user
+    *
+    * @apiSuccess {Integer} statusCode 响应码
+    * @apiSuccess {String} msg 提示信息
+    * @apiSuccess {Object} data 响应数据
+    * @apiSuccessExample Success-Response:
+    {
+      "statusCode": 0,
+      "msg": null,
+      "data": {
+        "question": "密保问题"
+      }
+    }
+    */
   router.get('/user/forgetGetQuestion', controller.partal.userController.forgetGetQuestion);
+  /**
+    * @apiVersion 0.1.0
+    * @api {post} /user/forgetCheckAnswer 校验密保问题返回token
+    *
+    * @apiParam {String} username 用户名 必填
+    * @apiParam {String} question 密保问题 必填
+    * @apiParam {String} answer 密保答案 必填
+    *
+    * @apiGroup user
+    *
+    * @apiSuccess {Integer} statusCode 响应码
+    * @apiSuccess {String} msg 提示信息
+    * @apiSuccess {Object} data 响应数据
+    * @apiSuccessExample Success-Response:
+    {
+      "statusCode": 0,
+      "msg": "问题回答正确",
+      "data": {
+        "token": "640fbb84-f27e-49d7-b8ff-89dfb2bf2a3c"
+      }
+    }
+    */
   router.post('/user/forgetCheckAnswer', controller.partal.userController.forgetCheckAnswer);
+  /**
+    * @apiVersion 0.1.0
+    * @api {post} /user/forgetRestPassword 忘记密码用token 重置密码
+    *
+    * @apiParam {String} username 用户名 必填
+    * @apiParam {String} paswordNew 新密码 必填
+    * @apiParam {String} forgetToken 返回的token 必填
+    *
+    * @apiGroup user
+    *
+    * @apiSuccess {Integer} statusCode 响应码
+    * @apiSuccess {String} msg 提示信息
+    * @apiSuccess {Object} data 响应数据
+    * @apiSuccessExample Success-Response:
+    {
+      "statusCode": 0,
+      "msg": "修改密码成功",
+      "data": null
+    }
+    */
   router.post('/user/forgetRestPassword', controller.partal.userController.forgetRestPassword);
 };
