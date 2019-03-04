@@ -5,6 +5,8 @@
  */
 module.exports = app => {
   const { router, controller } = app;
+  const checkLogin = app.middleware.checkLogin({});
+
   /**
     * @apiVersion 0.1.0
     * @api {get} /user/list 获取列表数据
@@ -161,7 +163,7 @@ module.exports = app => {
       }
     }
   */
-  router.get('/user/getUserSession', controller.partal.userController.getUserSession);
+  router.get('/user/getUserSession', checkLogin, controller.partal.userController.getUserSession);
   /**
     * @apiVersion 0.1.0
     * @api {get} /user/getUserInfo 获取用户详细信息
@@ -184,7 +186,7 @@ module.exports = app => {
       }
     }
   */
-  router.get('/user/getUserInfo', controller.partal.userController.getUserInfo);
+  router.get('/user/getUserInfo', checkLogin, controller.partal.userController.getUserInfo);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/updateUserInfo 退出登录
@@ -209,7 +211,7 @@ module.exports = app => {
       }
     }
   */
-  router.post('/user/updateUserInfo', controller.partal.userController.updateUserInfo);
+  router.post('/user/updateUserInfo', checkLogin, controller.partal.userController.updateUserInfo);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/resetPassword 登录状态的重置密码
@@ -229,7 +231,7 @@ module.exports = app => {
       "data": null
     }
     */
-  router.post('/user/resetPassword', controller.partal.userController.resetPassword);
+  router.post('/user/resetPassword', checkLogin, controller.partal.userController.resetPassword);
   /**
     * @apiVersion 0.1.0
     * @api {get} /user/forgetGetQuestion 获取密保问题
