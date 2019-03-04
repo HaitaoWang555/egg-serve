@@ -8,4 +8,5 @@ module.exports = app => {
   router.get('/', controller.home.index);
 
   require('./router/test')(app);
+  require('./router/partal/UserRouter')(app);
 };
