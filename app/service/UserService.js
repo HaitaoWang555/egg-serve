@@ -83,7 +83,7 @@ class TestService extends Service {
    * @return ServerResponse.msg
    */
   async checkValid(type, value) {
-    if (type.trim()) {
+    if (type && type.trim()) {
       if (USERNAME === type) {
         return await this._checkExistColByField(USERNAME, value)
           ? this.ServerResponse.createByErrorMsg('用户名已存在')
@@ -118,6 +118,7 @@ class TestService extends Service {
    * @return {Promise.<void>}
    */
   async register(user) {
+    if (!user) return await this.checkValid();
     // 用户名存在报错
     const validUsernameResponse = await this.checkValid(USERNAME, user.username);
     if (!validUsernameResponse.isSuccess()) return validUsernameResponse;
