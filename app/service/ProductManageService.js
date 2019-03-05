@@ -2,6 +2,9 @@
 /* eslint valid-jsdoc: "off" */
 const Service = require('egg').Service;
 
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 class ProductManageService extends Service {
   /**
   * @param {Egg.Context} ctx - egg Context
@@ -94,7 +97,7 @@ class ProductManageService extends Service {
       pageSize,
       list: rows,
       total: count,
-      host: this.config.oss.client.endpoint,
+      // host: this.config.oss.client.endpoint,
     });
   }
 
@@ -113,13 +116,13 @@ class ProductManageService extends Service {
       if (!product) return this.ServerResponse.createByErrorMsg('产品id错误');
       return this.ServerResponse.createBySuccessData({
         product,
-        host: this.config.oss.client.endpoint,
+        // host: this.config.oss.client.endpoint,
       });
     } else if (productName && !productId) {
       // TODO 按名称分页搜索 返回产品列表
       const { count, rows } = await this.ProductModel.findAndCount({
         // attributes: { exclude: ['createTime', 'updateTime'] },
-        where: { name: { $like: `%${productName}%` } },
+        where: { name: { [Op.like]: `%${productName}%` } },
         order: [[ 'id', 'ASC' ]],
         limit: Number(pageSize || 0),
         offset: Number(pageNum - 1 || 0) * Number(pageSize || 0),
@@ -131,7 +134,7 @@ class ProductManageService extends Service {
         pageSize,
         list: rows,
         total: count,
-        host: this.config.oss.client.endpoint,
+        // host: this.config.oss.client.endpoint,
       });
     }
     return this.ServerResponse.createByErrorCodeMsg(this.ResponseCode.ILLEGAL_ARGUMENT, 'ILLEGAL_ARGUMENT');
