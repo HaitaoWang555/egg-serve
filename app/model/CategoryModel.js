@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = app => {
-  const { INTEGER, STRING, DATE, UUID, UUIDV4 } = app.Sequelize;
+  const { INTEGER, STRING, DATE, UUIDV4 } = app.Sequelize;
 
   const CategoryModel = app.model.define('category', {
     id: {
-      type: UUID,
+      type: STRING(50),
       defaultValue: UUIDV4,
       allowNull: false,
       primaryKey: true,
@@ -13,7 +13,7 @@ module.exports = app => {
     },
     // 父类别id 为0时为根节点，一级类别
     parentId: {
-      type: UUID,
+      type: STRING(50),
       allowNull: true,
     },
     // 类别名称

@@ -17,10 +17,10 @@ class CategoryManageService extends Service {
   /**
    * @feature 添加分类
    * @param name {String} 类别名称
-   * @param parentId {Number} 父类别id
+   * @param parentId {String} 父类别id
    * @return {*}
    */
-  async addCategory(name, parentId = 0) {
+  async addCategory(name, parentId = '0') {
     if (!name.trim()) return this.ServerResponse.createByErrorMsg('添加品类参数错误');
     const categoryRow = await this.CategoryModel.create({ name, parentId });
     if (!categoryRow) return this.ServerResponse.createByErrorMsg('添加品类失败');
@@ -47,7 +47,7 @@ class CategoryManageService extends Service {
    * @param parentId
    * @return {Promise.<*>}
    */
-  async getChildParallelCagtegory(parentId = 0) {
+  async getChildParallelCagtegory(parentId = '0') {
     const cagtegoryRows = await this.CategoryModel.findAll({
       attributes: [ 'id', 'parentId', 'name', 'status' ],
       where: { parentId },
