@@ -3,6 +3,9 @@
 const Service = require('egg').Service;
 
 class ProductManageService extends Service {
+  /**
+  * @param {Egg.Context} ctx - egg Context
+  */
   constructor(ctx) {
     super(ctx);
     this.ProductModel = ctx.model.ProductModel;
