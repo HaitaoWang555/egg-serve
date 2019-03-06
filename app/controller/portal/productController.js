@@ -15,6 +15,14 @@ class UserController extends Controller {
   }
 
   /**
+   * 获取产品列表
+   */
+  async getProductList() {
+    const response = await this.ProductService.getProductList(this.resquest.query);
+    this.ctx.body = response;
+  }
+
+  /**
    * 获取商品详情
    */
   async getDetail() {
