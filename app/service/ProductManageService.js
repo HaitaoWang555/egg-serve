@@ -2,9 +2,6 @@
 /* eslint valid-jsdoc: "off" */
 const Service = require('egg').Service;
 
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-
 class ProductManageService extends Service {
   /**
   * @param {Egg.Context} ctx - egg Context
@@ -120,6 +117,7 @@ class ProductManageService extends Service {
       });
     } else if (productName && !productId) {
       // TODO 按名称分页搜索 返回产品列表
+      const Op = this.app.Sequelize.Op;
       const { count, rows } = await this.ProductModel.findAndCount({
         // attributes: { exclude: ['createTime', 'updateTime'] },
         where: { name: { [Op.like]: `%${productName}%` } },
