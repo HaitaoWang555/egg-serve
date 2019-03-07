@@ -1,6 +1,7 @@
 /* eslint valid-jsdoc: "off" */
 
 'use strict';
+const Sequelize = require('sequelize');
 
 /**
  * @param {Egg.EggAppInfo} appInfo app info
@@ -31,6 +32,7 @@ module.exports = appInfo => {
     port: 5432,
     username: 'postgres',
     password: 123456,
+    operatorsAliases: Sequelize.Op,
     timezone: '+08:00', // 东八时区
   };
 

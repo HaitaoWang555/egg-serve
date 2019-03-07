@@ -8,5 +8,8 @@ module.exports = app => {
   router.get('/', controller.home.index);
 
   require('./router/test')(app);
-  require('./router/partal/UserRouter')(app);
+  require('./router/portal/UserRouter')(app);
+  require('./router/backend/categoryManageRouter')(app);
+  require('./router/portal/ProductRouter')(app);
+  require('./router/backend/productManageRouter')(app);
 };

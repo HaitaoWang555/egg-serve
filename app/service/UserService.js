@@ -127,7 +127,7 @@ class TestService extends Service {
     if (!validEmailResponse.isSuccess()) return validEmailResponse;
 
     try {
-      user.role = ROLE_CUSTOMER;
+      user.role = ROLE_ADMAIN;
       user.password = md5(user.password + salt);
       user = await this.UserModel.create(user, {
         attributes: { exclude: [ 'password', 'role', 'answer' ] },

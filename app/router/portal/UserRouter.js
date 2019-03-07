@@ -26,7 +26,7 @@ module.exports = app => {
     * "updated_at": "2019-02-27T03:56:19.105Z"
     * }]}}
     */
-  router.get('/user/list', controller.partal.userController.list);
+  router.get('/user/list', controller.portal.userController.list);
   /**
     * @apiVersion 0.1.0
     * @api {get} /user/getOne 根据id获取列表中某一个
@@ -47,7 +47,7 @@ module.exports = app => {
     * "updated_at": "2019-02-27T03:56:19.105Z"
     * }}}
     */
-  router.get('/user/getOne', controller.partal.userController.getOne);
+  router.get('/user/getOne', controller.portal.userController.getOne);
   /**
     * @apiVersion 0.1.0
     * @api {get} /user/removeOne 根据id删除列表中某一个
@@ -62,7 +62,7 @@ module.exports = app => {
     * "msg":"成功",
     * "data":{}
     */
-  router.put('/user/removeOne', controller.partal.userController.removeOne);
+  router.put('/user/removeOne', controller.portal.userController.removeOne);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/register 注册
@@ -96,7 +96,7 @@ module.exports = app => {
       }
     }
   */
-  router.post('/user/register', controller.partal.userController.register);
+  router.post('/user/register', controller.portal.userController.register);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/login 登录
@@ -122,7 +122,7 @@ module.exports = app => {
       }
     }
   */
-  router.post('/user/login', controller.partal.userController.login);
+  router.post('/user/login', controller.portal.userController.login);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/logout 退出登录
@@ -139,7 +139,7 @@ module.exports = app => {
       "data": null
     }
   */
-  router.post('/user/logout', controller.partal.userController.logout);
+  router.post('/user/logout', controller.portal.userController.logout);
   /**
     * @apiVersion 0.1.0
     * @api {get} /user/getUserSession 获取用户信息
@@ -163,7 +163,7 @@ module.exports = app => {
       }
     }
   */
-  router.get('/user/getUserSession', checkLogin, controller.partal.userController.getUserSession);
+  router.get('/user/getUserSession', checkLogin, controller.portal.userController.getUserSession);
   /**
     * @apiVersion 0.1.0
     * @api {get} /user/getUserInfo 获取用户详细信息
@@ -186,7 +186,7 @@ module.exports = app => {
       }
     }
   */
-  router.get('/user/getUserInfo', checkLogin, controller.partal.userController.getUserInfo);
+  router.get('/user/getUserInfo', checkLogin, controller.portal.userController.getUserInfo);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/updateUserInfo 退出登录
@@ -211,7 +211,7 @@ module.exports = app => {
       }
     }
   */
-  router.post('/user/updateUserInfo', checkLogin, controller.partal.userController.updateUserInfo);
+  router.post('/user/updateUserInfo', checkLogin, controller.portal.userController.updateUserInfo);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/resetPassword 登录状态的重置密码
@@ -231,7 +231,7 @@ module.exports = app => {
       "data": null
     }
     */
-  router.post('/user/resetPassword', checkLogin, controller.partal.userController.resetPassword);
+  router.post('/user/resetPassword', checkLogin, controller.portal.userController.resetPassword);
   /**
     * @apiVersion 0.1.0
     * @api {get} /user/forgetGetQuestion 获取密保问题
@@ -252,7 +252,7 @@ module.exports = app => {
       }
     }
     */
-  router.get('/user/forgetGetQuestion', controller.partal.userController.forgetGetQuestion);
+  router.get('/user/forgetGetQuestion', controller.portal.userController.forgetGetQuestion);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/forgetCheckAnswer 校验密保问题返回token
@@ -275,7 +275,7 @@ module.exports = app => {
       }
     }
     */
-  router.post('/user/forgetCheckAnswer', controller.partal.userController.forgetCheckAnswer);
+  router.post('/user/forgetCheckAnswer', controller.portal.userController.forgetCheckAnswer);
   /**
     * @apiVersion 0.1.0
     * @api {post} /user/forgetRestPassword 忘记密码用token 重置密码
@@ -296,5 +296,5 @@ module.exports = app => {
       "data": null
     }
     */
-  router.post('/user/forgetRestPassword', controller.partal.userController.forgetRestPassword);
+  router.post('/user/forgetRestPassword', controller.portal.userController.forgetRestPassword);
 };
