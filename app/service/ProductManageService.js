@@ -9,6 +9,7 @@ class ProductManageService extends Service {
   constructor(ctx) {
     super(ctx);
     this.ProductModel = ctx.model.ProductModel;
+    this.CategoryModel = ctx.model.CategoryModel;
     this.ResponseCode = ctx.response.ResponseCode;
     this.ServerResponse = ctx.response.ServerResponse;
   }
@@ -67,8 +68,8 @@ class ProductManageService extends Service {
       // attributes: { exclude: ['createTime', 'updateTime'] },
       where: { id },
       // include: [
-      //   { model: this.CategoryModel, as: 'categoryId', attributes: ['name'] }
-      // ]
+      //   { model: this.CategoryModel, as: 'categoryId', attributes: [ 'name' ] },
+      // ],
     });
     if (!productRow) this.ServerResponse.createByErrorMsg('产品已下架或删除');
     return this.ServerResponse.createBySuccessData(productRow.toJSON());
