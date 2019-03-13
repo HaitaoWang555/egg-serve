@@ -12,6 +12,8 @@ class ProductManageService extends Service {
     this.CategoryModel = ctx.model.CategoryModel;
     this.ResponseCode = ctx.response.ResponseCode;
     this.ServerResponse = ctx.response.ServerResponse;
+    this.CategoryModel.hasOne(this.ProductModel, { foreignKey: 'id' });
+    this.ProductModel.belongsTo(this.CategoryModel, { foreignKey: 'categoryId' });
   }
 
   /**
@@ -65,13 +67,13 @@ class ProductManageService extends Service {
   async getDetail(id) {
     if (!id) return this.ServerResponse.createByErrorCodeMsg(this.ResponseCode.ILLEGAL_ARGUMENT, 'ILLEGAL_ARGUMENT');
     const productRow = await this.ProductModel.findOne({
-      // attributes: { exclude: ['createTime', 'updateTime'] },
+      // attributes: { exclude: [ 'categoryId', 'createTime', 'updateTime' ] },
       where: { id },
-      // include: [
-      //   { model: this.CategoryModel, as: 'categoryId', attributes: [ 'name' ] },
-      // ],
+      include: [
+        { model: this.CategoryModel, attributes: [ 'name' ] },
+      ],
     });
-    if (!productRow) this.ServerResponse.createByErrorMsg('产品已下架或删除');
+    if (!productRow) return this.ServerResponse.createByErrorMsg('产品已下架或删除');
     return this.ServerResponse.createBySuccessData(productRow.toJSON());
   }
 
