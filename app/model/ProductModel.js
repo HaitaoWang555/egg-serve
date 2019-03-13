@@ -14,7 +14,7 @@ module.exports = app => {
     },
     // 分类id
     categoryId: {
-      type: UUID,
+      type: STRING(50),
       allowNull: false,
     },
     // 商品名称

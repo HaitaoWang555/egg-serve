@@ -9,7 +9,7 @@ module.exports = app => {
   // });
   app.beforeStart(async function() {
     // 应用会等待这个函数执行完成才启动
-    await app.model.sync(); // 开发环境使用 这将先丢弃表，然后重新创建它
+    await app.model.sync(); // { force: true } 开发环境使用 这将先丢弃表，然后重新创建它
     // await app.model.sync({});
   });
 };
