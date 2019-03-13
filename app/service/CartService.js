@@ -38,7 +38,7 @@ class CartServiceService extends Service {
     const cartRow = await this.CartModel.findOne({ where: { userId, productId } });
     let msg;
     if (!cartRow) {
-      // TODO 不存在 进行添加
+      // 不存在 进行添加
       await this.CartModel.create({
         userId,
         productId,
@@ -47,7 +47,7 @@ class CartServiceService extends Service {
       });
       msg = '添加';
     } else {
-      // TODO 已存在 增加数量
+      // 已存在 增加数量
       const stock = productRow.get('stock');
       const quantity = cartRow.get('quantity');
       count = quantity + count > stock ? stock : quantity + count;
@@ -81,10 +81,8 @@ class CartServiceService extends Service {
   async getCartListByUserId(msg, userId = this.session.currentUser.id) {
     const cartArr = await this.CartModel.findAll({
       where: { userId },
-      // include: [
-      //   { model: this.ProductModel, as: 'id' },
-      // ],
-      // include: [{ model: this.ProductModel, where: { id: this.Sequelize.col('cart.productId') } }],
+      attributes: { exclude: [ 'userId' ] },
+      include: [{ model: this.ProductModel, attributes: { exclude: [ 'detail', 'subImages', 'createTime', 'updateTime' ] } }],
     }).map(rows => rows && rows.toJSON());
     const totalPrice = cartArr.reduce((prePrice, curItem) => {
       return curItem.checked ? Number(Number(prePrice) + Number(curItem.quantity) * Number(curItem.product.price)).toFixed(2) : 0;
