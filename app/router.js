@@ -13,4 +13,5 @@ module.exports = app => {
   require('./router/portal/ProductRouter')(app);
   require('./router/backend/productManageRouter')(app);
   require('./router/portal/CartRouter.js')(app);
+  require('./router/portal/ShippingRouter')(app);
 };
