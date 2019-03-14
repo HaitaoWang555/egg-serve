@@ -21,7 +21,7 @@ module.exports = app => {
     },
     // 订单号
     orderNum: {
-      type: BIGINT(20),
+      type: BIGINT,
       allowNull: false,
     },
     shippingId: {
@@ -35,19 +35,19 @@ module.exports = app => {
     },
     // 支付类型， 1-在线支付
     paymentType: {
-      type: INTEGER(4),
+      type: INTEGER,
       allowNull: true,
       defaultValue: ONLINE_PAY.CODE,
     },
     // 运费，单位元
     postage: {
-      type: INTEGER(10),
+      type: INTEGER,
       allowNull: true,
       defaultValue: 0,
     },
     // 订单状态 0已取消 10未支付 20已支付 40已发货 50订单完成 60订单关闭
     status: {
-      type: INTEGER(10),
+      type: INTEGER,
       allowNull: true,
       defaultValue: NO_PAY.CODE,
     },

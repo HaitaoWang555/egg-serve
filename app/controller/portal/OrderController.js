@@ -4,6 +4,9 @@
 const Controller = require('egg').Controller;
 
 class OrderController extends Controller {
+  /**
+   * @param {Egg.Context} ctx - egg Context
+   */
   constructor(ctx) {
     super(ctx);
     this.request = ctx.request;

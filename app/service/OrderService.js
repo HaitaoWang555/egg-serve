@@ -29,6 +29,7 @@ class OrderServiceService extends Service {
     this.OrderItemModel = ctx.model.OrderItemModel;
     this.ResponseCode = ctx.response.ResponseCode;
     this.ServerResponse = ctx.response.ServerResponse;
+    this.Op = ctx.app.Sequelize.Op;
     this.ProductModel.hasOne(this.CartModel, { foreignKey: 'id' });
     this.CartModel.belongsTo(this.ProductModel, { foreignKey: 'productId' });
 
@@ -117,9 +118,9 @@ class OrderServiceService extends Service {
    */
   async getDetail(orderNum) {
     const { id: userId, role } = this.session.currentUser;
-    const order = await this.OrderModel.findOne({ where: { orderNum, userId: role === ROLE_ADMAIN ? { $regexp: '[0-9a-zA-Z]' } : userId } }).then(r => r && r.toJSON());
+    const order = await this.OrderModel.findOne({ where: { orderNum, userId: role === ROLE_ADMAIN ? { [this.Op.regexp]: '[0-9a-zA-Z]' } : userId } }).then(r => r && r.toJSON());
     if (!order) return this.ServerResponse.createByErrorMsg('订单不存在');
-    const orderItem = await this.OrderItemModel.findAll({ where: { orderNum, userId: role === ROLE_ADMAIN ? { $regexp: '[0-9a-zA-Z]' } : userId } }).then(rows => rows && rows.map(r => r.toJSON()));
+    const orderItem = await this.OrderItemModel.findAll({ where: { orderNum, userId: role === ROLE_ADMAIN ? { [this.Op.regexp]: '[0-9a-zA-Z]' } : userId } }).then(rows => rows && rows.map(r => r.toJSON()));
     if (orderItem.length < 1) return this.ServerResponse.createByErrorMsg('订单不存在');
     const orderDetail = await this._createOrderDetail(order, orderItem, order.shippingId);
     return this.ServerResponse.createBySuccessMsgAndData('订单详情', orderDetail);
@@ -151,12 +152,12 @@ class OrderServiceService extends Service {
     const { id: userId, role } = this.session.currentUser;
     // 循环查询解决
     const { count, rows } = await this.OrderModel.findAndCount({
-      where: { userId: role === ROLE_ADMAIN ? { $regexp: '[0-9a-zA-Z]' } : userId },
+      where: { userId: role === ROLE_ADMAIN ? { [this.Op.regexp]: '[0-9a-zA-Z]' } : userId },
       order: [[ 'id', 'DESC' ]],
       limit: Number(pageSize || 0),
       offset: Number(pageNum - 1 || 0) * Number(pageSize || 0),
     });
-    if (rows.length < 1) this.ServerResponse.createBySuccessMsg('已无订单数据');
+    if (rows.length < 1) return this.ServerResponse.createBySuccessMsg('已无订单数据');
     const orderList = rows.map(row => row && row.toJSON());
 
     const orderListWithOrderItemsAndShipping = await Promise.all(orderList.map(async item => {
@@ -168,7 +169,7 @@ class OrderServiceService extends Service {
     const list = this._createOrderDetailList(orderListWithOrderItemsAndShipping);
     // 关联查询解决 bug
     // const orderListWithOrderItemsAndShipping = await this.OrderModel.findAll({
-    //     where: { userId: role === ROLE_ADMAIN ? { $regexp: '[0-9a-zA-Z]' } : userId },
+    //     where: { userId: role === ROLE_ADMAIN ? { [this.Op.regexp]: '[0-9a-zA-Z]' } : userId },
     //     order: [[ 'id', 'DESC' ]],
     //     limit: Number(pageSize ||  0),
     //     offset: Number(pageNum - 1 ||  0) * Number(pageSize ||  0),
@@ -186,7 +187,7 @@ class OrderServiceService extends Service {
       pageNum,
       pageSize,
       total: count,
-      host: this.config.oss.client.endpoint,
+      // host: this.config.oss.client.endpoint,
     });
   }
 
@@ -221,7 +222,7 @@ class OrderServiceService extends Service {
       pageNum,
       pageSize,
       total: count,
-      host: this.config.oss.client.endpoint,
+      // host: this.config.oss.client.endpoint,
     });
   }
 

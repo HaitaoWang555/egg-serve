@@ -18,7 +18,7 @@ module.exports = app => {
     },
     // 订单号
     orderNum: {
-      type: BIGINT(20),
+      type: BIGINT,
       allowNull: true,
     },
     // 商品id
@@ -43,7 +43,7 @@ module.exports = app => {
     },
     // 商品数量
     quantity: {
-      type: INTEGER(10),
+      type: INTEGER,
       allowNull: true,
     },
     // 商品总价，单位元，保留2位小数
