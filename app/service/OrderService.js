@@ -29,7 +29,6 @@ class OrderServiceService extends Service {
     this.OrderItemModel = ctx.model.OrderItemModel;
     this.ResponseCode = ctx.response.ResponseCode;
     this.ServerResponse = ctx.response.ServerResponse;
-    this.Op = ctx.app.Sequelize.Op;
     this.ProductModel.hasOne(this.CartModel, { foreignKey: 'id' });
     this.CartModel.belongsTo(this.ProductModel, { foreignKey: 'productId' });
 
@@ -118,9 +117,19 @@ class OrderServiceService extends Service {
    */
   async getDetail(orderNum) {
     const { id: userId, role } = this.session.currentUser;
-    const order = await this.OrderModel.findOne({ where: { orderNum, userId: role === ROLE_ADMAIN ? { [this.Op.regexp]: '[0-9a-zA-Z]' } : userId } }).then(r => r && r.toJSON());
+    let order;
+    if (role === ROLE_ADMAIN) {
+      order = await this.OrderModel.findOne({ where: { orderNum } }).then(r => r && r.toJSON());
+    } else {
+      order = await this.OrderModel.findOne({ where: { orderNum, userId } }).then(r => r && r.toJSON());
+    }
     if (!order) return this.ServerResponse.createByErrorMsg('订单不存在');
-    const orderItem = await this.OrderItemModel.findAll({ where: { orderNum, userId: role === ROLE_ADMAIN ? { [this.Op.regexp]: '[0-9a-zA-Z]' } : userId } }).then(rows => rows && rows.map(r => r.toJSON()));
+    let orderItem;
+    if (role === ROLE_ADMAIN) {
+      orderItem = await this.OrderItemModel.findAll({ where: { orderNum } }).then(rows => rows && rows.map(r => r.toJSON()));
+    } else {
+      orderItem = await this.OrderItemModel.findAll({ where: { orderNum, userId } }).then(rows => rows && rows.map(r => r.toJSON()));
+    }
     if (orderItem.length < 1) return this.ServerResponse.createByErrorMsg('订单不存在');
     const orderDetail = await this._createOrderDetail(order, orderItem, order.shippingId);
     return this.ServerResponse.createBySuccessMsgAndData('订单详情', orderDetail);
@@ -151,12 +160,22 @@ class OrderServiceService extends Service {
   async getList({ pageNum = 1, pageSize = 10 }) {
     const { id: userId, role } = this.session.currentUser;
     // 循环查询解决
-    const { count, rows } = await this.OrderModel.findAndCount({
-      where: { userId: role === ROLE_ADMAIN ? { [this.Op.regexp]: '[0-9a-zA-Z]' } : userId },
-      order: [[ 'id', 'DESC' ]],
-      limit: Number(pageSize || 0),
-      offset: Number(pageNum - 1 || 0) * Number(pageSize || 0),
-    });
+    let obj;
+    if (role === ROLE_ADMAIN) {
+      obj = await this.OrderModel.findAndCount({
+        order: [[ 'id', 'DESC' ]],
+        limit: Number(pageSize || 0),
+        offset: Number(pageNum - 1 || 0) * Number(pageSize || 0),
+      });
+    } else {
+      obj = await this.OrderModel.findAndCount({
+        where: { userId },
+        order: [[ 'id', 'DESC' ]],
+        limit: Number(pageSize || 0),
+        offset: Number(pageNum - 1 || 0) * Number(pageSize || 0),
+      });
+    }
+    const { count, rows } = obj;
     if (rows.length < 1) return this.ServerResponse.createBySuccessMsg('已无订单数据');
     const orderList = rows.map(row => row && row.toJSON());
 
@@ -167,20 +186,6 @@ class OrderServiceService extends Service {
       return { ...item, orderItemList, shipping };
     }));
     const list = this._createOrderDetailList(orderListWithOrderItemsAndShipping);
-    // 关联查询解决 bug
-    // const orderListWithOrderItemsAndShipping = await this.OrderModel.findAll({
-    //     where: { userId: role === ROLE_ADMAIN ? { [this.Op.regexp]: '[0-9a-zA-Z]' } : userId },
-    //     order: [[ 'id', 'DESC' ]],
-    //     limit: Number(pageSize ||  0),
-    //     offset: Number(pageNum - 1 ||  0) * Number(pageSize ||  0),
-    //     include: [
-    //       { model: this.OrderItemModel },
-    //       { model: this.ShippingModel, where: { id: app.Sequelize.literal('order.shippingId = shipping.id') } }
-    //     ],
-    //   }).then(rows => rows && rows.map(r => r.toJSON()))
-    //
-    // const groupList = this._groupList(orderListWithOrderItemsAndShipping)
-    // const list = this._createOrderDetailList(groupList)
 
     return this.ServerResponse.createBySuccessData({
       list,
@@ -281,7 +286,7 @@ class OrderServiceService extends Service {
   async _getCartListWithProduct(userId) {
     const arr = await this.CartModel.findAll({
       where: { userId, checked: CHECKED },
-      include: [{ model: this.ProductModel, where: { id: this.ctx.app.Sequelize.col('productId'), status: ON_SALE.CODE } }],
+      include: [{ model: this.ProductModel, where: { status: ON_SALE.CODE } }],
     }).then(rows => rows && rows.map(r => r.toJSON()));
 
     if (arr.length === 0) return this.ServerResponse.createByErrorMsg('购物车为空');
